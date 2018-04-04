@@ -56,10 +56,11 @@ func GetVars(r *http.Request) Vars {
 	return vars
 }
 
-func NewRouterTemplateHandler(errorFunc ErrorFunc) *RouterTemplateHandler {
-	h := &RouterTemplateHandler{RouteHandler: *NewRouteHandler(errorFunc), types: map[string]string{}}
+func NewRouterTemplateHandler() *RouterTemplateHandler {
+	h := &RouterTemplateHandler{RouteHandler: *NewRouteHandler(), types: map[string]string{}}
 	return h
 }
+
 
 func (handler *RouterTemplateHandler) RegisterType(typeName string, regex string) {
 	regexp.MustCompile(regex)

@@ -14,6 +14,17 @@ const (
 
 type URLVars map[string]string
 
+func (vars *URLVars) And(vars2 URLVars) URLVars {
+	vr := URLVars{}
+	for k, v := range *vars {
+		vr[k] = v
+	}
+	for k, v := range vars2 {
+		vr[k] = v
+	}
+	return vr
+}
+
 type Route interface {
 	consume(http.ResponseWriter, *http.Request) ConsumeResult
 	URL(URLVars) string
@@ -26,12 +37,16 @@ type RouteHandler struct {
 	error  ErrorFunc
 }
 
-func NewRouteHandler(errorFunc ErrorFunc) *RouteHandler {
+func NewRouteHandler() *RouteHandler {
 	rh := RouteHandler{}
-	rh.error = errorFunc
 	return &rh
 
 }
+
+func (handler *RouterTemplateHandler) ErrorHandler(errorFunc ErrorFunc) {
+	handler.error = errorFunc
+}
+
 func (h *RouteHandler) HandleFunc(route Route) Route {
 	h.routes = append(h.routes, route)
 	return route
